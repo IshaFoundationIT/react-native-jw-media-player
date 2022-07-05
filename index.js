@@ -218,6 +218,7 @@ export default class JWPlayer extends Component {
     onBuffer: PropTypes.func,
     onTime: PropTypes.func,
     onComplete: PropTypes.func,
+    onDisplayClick: PropTypes.func,
     onFullScreenRequested: PropTypes.func,
     onFullScreen: PropTypes.func,
     onFullScreenExitRequested: PropTypes.func,

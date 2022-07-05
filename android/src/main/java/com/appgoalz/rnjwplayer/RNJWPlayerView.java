@@ -92,6 +92,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import android.widget.ImageView;
+import android.os.Handler;
+import android.os.Looper;
+
+
 public class RNJWPlayerView extends RelativeLayout implements
         VideoPlayerEvents.OnFullscreenListener,
         VideoPlayerEvents.OnReadyListener,
@@ -362,26 +367,32 @@ public class RNJWPlayerView extends RelativeLayout implements
                 mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
 
-            mPlayerViewContainer = (ViewGroup) mPlayerView.getParent();
+            /*  --------------------
+                Commenting below section out , since when going to fullscreen ,
+                this is preventing rendering overlay on top of video player on RN side 
+                --------------------
+            */
 
-            // Remove the JWPlayerView from the list item.
-            if (mPlayerViewContainer != null) {
-                mPlayerViewContainer.removeView(mPlayerView);
-            }
+//             mPlayerViewContainer = (ViewGroup) mPlayerView.getParent();
 
-            // Initialize a new rendering surface.
-//                        mPlayerView.initializeSurface();
+//             // Remove the JWPlayerView from the list item.
+//             if (mPlayerViewContainer != null) {
+//                 mPlayerViewContainer.removeView(mPlayerView);
+//             }
 
-            // Add the JWPlayerView to the RootView as soon as the UI thread is ready.
-            mRootView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mRootView.addView(mPlayerView, new ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                    ));
-                }
-            });
+//             // Initialize a new rendering surface.
+// //                        mPlayerView.initializeSurface();
+
+//             // Add the JWPlayerView to the RootView as soon as the UI thread is ready.
+//             mRootView.post(new Runnable() {
+//                 @Override
+//                 public void run() {
+//                     mRootView.addView(mPlayerView, new ViewGroup.LayoutParams(
+//                             ViewGroup.LayoutParams.MATCH_PARENT,
+//                             ViewGroup.LayoutParams.MATCH_PARENT
+//                     ));
+//                 }
+//             });
 
             WritableMap eventEnterFullscreen = Arguments.createMap();
             eventEnterFullscreen.putString("message", "onFullscreenRequested");
@@ -402,21 +413,27 @@ public class RNJWPlayerView extends RelativeLayout implements
                 mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
 
-            // Remove the player view from the root ViewGroup.
-            mRootView.removeView(mPlayerView);
 
-            // As soon as the UI thread has finished processing the current message queue it
-            // should add the JWPlayerView back to the list item.
-            mPlayerViewContainer.post(new Runnable() {
-                @Override
-                public void run() {
-                    mPlayerViewContainer.addView(mPlayerView, new ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                    ));
-                    mPlayerView.layout(mPlayerViewContainer.getLeft(), mPlayerViewContainer.getTop(), mPlayerViewContainer.getRight(), mPlayerViewContainer.getBottom());
-                }
-            });
+            /*  --------------------
+                Commenting below section out , since have commented out code above to add player to rootView 
+                --------------------
+            */
+
+            // Remove the player view from the root ViewGroup.
+            // mRootView.removeView(mPlayerView);
+
+            // // As soon as the UI thread has finished processing the current message queue it
+            // // should add the JWPlayerView back to the list item.
+            // mPlayerViewContainer.post(new Runnable() {
+            //     @Override
+            //     public void run() {
+            //         mPlayerViewContainer.addView(mPlayerView, new ViewGroup.LayoutParams(
+            //                 ViewGroup.LayoutParams.MATCH_PARENT,
+            //                 ViewGroup.LayoutParams.MATCH_PARENT
+            //         ));
+            //         mPlayerView.layout(mPlayerViewContainer.getLeft(), mPlayerViewContainer.getTop(), mPlayerViewContainer.getRight(), mPlayerViewContainer.getBottom());
+            //     }
+            // });
 
             WritableMap eventExitFullscreen = Arguments.createMap();
             eventExitFullscreen.putString("message", "onFullscreenExitRequested");
@@ -705,13 +722,19 @@ public class RNJWPlayerView extends RelativeLayout implements
             }
         }
 
+        // Key to decide whether to show forward control and seekbar
+        boolean ieoClassAreaControls = false;
+        if (prop.hasKey("ieoClassAreaControls")) {
+            ieoClassAreaControls = prop.getBoolean("ieoClassAreaControls");
+        }
+
         PlayerConfig playerConfig = configBuilder.build();
 
         Context simpleContext = getNonBuggyContext(getReactContext(), getAppContext());
 
         this.destroyPlayer();
-
-        mPlayerView = new RNJWPlayer(simpleContext);
+        
+        mPlayerView = new RNJWPlayer(simpleContext,ieoClassAreaControls);
         
         mPlayerView.setFocusable(true);
         mPlayerView.setFocusableInTouchMode(true);
@@ -894,7 +917,10 @@ public class RNJWPlayerView extends RelativeLayout implements
 
     @Override
     public void onDisplayClick(DisplayClickEvent displayClickEvent) {
-
+        Log.d("RNJWPlayer","onDisplayClick...");
+        WritableMap event = Arguments.createMap();
+        event.putString("message", "onDisplayClick");
+        getReactContext().getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "topDisplayClick", event);
     }
 
     @Override

@@ -150,6 +150,7 @@ declare module "react-native-jw-media-player" {
     preload?: Preloads;
     interfaceBehavior?: InterfaceBehaviors;
     hideUIGroup?: UIGroups;
+    ieoClassAreaControls?: Boolean;
     processSpcUrl?: string;
     fairplayCertUrl?: string;
     contentUUID?: string;
@@ -161,6 +162,8 @@ declare module "react-native-jw-media-player" {
     config: Config;
     controls: boolean;
     onPlayerReady?: (event: any) => void;
+    // Added this prop to get callback whenever user touches the player overlay
+    onDisplayClick?: (event: any) => void;
     onPlaylist?: (playlist: PlaylistItem[]) => void;
     onBeforePlay?: (event: any) => void;
     onBeforeComplete?: (event: any) => void;
