@@ -19,11 +19,11 @@ public class RNJWPlayer extends JWPlayerView {
     public Boolean fullScreenOnLandscape = false;
     public Boolean exitFullScreenOnPortrait = false;
 
-    // Changed constructor to accept boolean for ieoClassAreaControls
-    public RNJWPlayer(Context var1, Boolean ieoClassAreaControls) {
+    // Changed constructor to accept boolean for hideSeekbarAndForwardConrol
+    public RNJWPlayer(Context var1, Boolean hideSeekbarAndForwardConrol) {
         super(var1);
-        Log.d("RNJWPlayer", "ieoClassAreaControls " + ieoClassAreaControls);
-        if(ieoClassAreaControls){
+        Log.d("RNJWPlayer", "hideSeekbarAndForwardConrol " + hideSeekbarAndForwardConrol);
+        if(hideSeekbarAndForwardConrol){
             hideSeekbarAndForwardControl();
         }
     }

@@ -723,9 +723,9 @@ public class RNJWPlayerView extends RelativeLayout implements
         }
 
         // Key to decide whether to show forward control and seekbar
-        boolean ieoClassAreaControls = false;
-        if (prop.hasKey("ieoClassAreaControls")) {
-            ieoClassAreaControls = prop.getBoolean("ieoClassAreaControls");
+        boolean hideSeekbarAndForwardConrol = false;
+        if (prop.hasKey("hideSeekbarAndForwardConrol")) {
+            hideSeekbarAndForwardConrol = prop.getBoolean("hideSeekbarAndForwardConrol");
         }
 
         PlayerConfig playerConfig = configBuilder.build();
@@ -734,7 +734,7 @@ public class RNJWPlayerView extends RelativeLayout implements
 
         this.destroyPlayer();
         
-        mPlayerView = new RNJWPlayer(simpleContext,ieoClassAreaControls);
+        mPlayerView = new RNJWPlayer(simpleContext,hideSeekbarAndForwardConrol);
         
         mPlayerView.setFocusable(true);
         mPlayerView.setFocusableInTouchMode(true);
