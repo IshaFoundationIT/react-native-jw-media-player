@@ -355,11 +355,17 @@
 - (void)jwplayer:(id<JWPlayer>)player didLoadPlaylistItem:(JWPlayerItem *)item at:(NSUInteger)index
 {
     if (_parentView.onPlaylistItem) {
+        NSString *file;
+        
         NSMutableDictionary* sourceDict = [[NSMutableDictionary alloc] init];
         for (JWVideoSource* source in item.videoSources) {
             [sourceDict setObject:source.file forKey:@"file"];
             [sourceDict setObject:source.label forKey:@"label"];
             [sourceDict setObject:@(source.defaultVideo) forKey:@"default"];
+            
+            if (source.defaultVideo) {
+                file = [source.file absoluteString];
+            }
         }
         
         NSMutableDictionary* schedDict = [[NSMutableDictionary alloc] init];
@@ -377,6 +383,7 @@
         }
         
         NSDictionary* itemDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  file, @"file",
                                   item.mediaId, @"mediaId",
                                   item.title, @"title",
                                   item.description, @"description",
@@ -404,11 +411,17 @@
         NSMutableArray* playlistArray = [[NSMutableArray alloc] init];
         
         for (JWPlayerItem* item in playlist) {
+            NSString *file;
+            
             NSMutableDictionary* sourceDict = [[NSMutableDictionary alloc] init];
             for (JWVideoSource* source in item.videoSources) {
                 [sourceDict setObject:source.file forKey:@"file"];
                 [sourceDict setObject:source.label forKey:@"label"];
                 [sourceDict setObject:@(source.defaultVideo) forKey:@"default"];
+                
+                if (source.defaultVideo) {
+                    file = [source.file absoluteString];
+                }
             }
             
             NSMutableDictionary* schedDict = [[NSMutableDictionary alloc] init];
@@ -426,6 +439,7 @@
             }
             
             NSDictionary* itemDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      file, @"file",
                                       item.mediaId, @"mediaId",
                                       item.title, @"title",
                                       item.description, @"description",
