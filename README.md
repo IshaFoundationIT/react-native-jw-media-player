@@ -323,6 +323,22 @@ Then use getCurrentAudioTrack or setCurrentAudioTrack(index) to view or change t
 
 This is all handled automatically if using the default player controls, but these functions are helpful if you're implementing custom controls.
 
+### QualityLevel
+
+Each QualityLevel object has the following keys:
+
+`index`: number
+
+`playListPosition`: number
+
+`bitRate`: number
+
+`height`: number
+
+`width`: number
+
+`label`: string
+
 ### Stretching
 
 `uniform`: (default) Fits JW Player dimensions while maintaining aspect ratio
@@ -461,6 +477,9 @@ public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Conf
 | **`getCurrentAudioTrack`**  | Returns promise that returns the index of the current audio track in array returned by getAudioTracks                                                                                   | `none`                        |
 | **`setCurrentAudioTrack`**  | Sets the current audio track to the audio track at the specified index in the array returned by getAudioTracks                                                                          | `Int`                         |
 | **`setCurrentCaptions`**    | Turns off captions when argument is 0. Setting argument to another integer, sets captions to track at playlistItem.tracks[integer - 1]                                                  | `Int`                         |
+| **`setCurrentQuality`**     | Sets the player video quality level index.                                                                                                                                              | `Int`                         |
+| **`currentQuality`**        | Gets the player current video quality level index.                                                                                                                                      | `none`                        |
+| **`getQualityLevels`**      | Returns promise that returns an array of [QualityLevels](#QualityLevel).                                                                                                                 | `none`                        |
 
 ## Available callbacks
 
