@@ -782,6 +782,7 @@
 -(void)removePlayerView
 {
     if (_playerView) {
+        [_playerView.player pause];
         [_playerView.player stop];
         [_playerView removeFromSuperview];
         _playerView = nil;
