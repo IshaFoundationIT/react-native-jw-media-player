@@ -58,14 +58,17 @@
     
     [self removePlayerView];
     [self dismissPlayerViewController];
-    
-    NSError* activationError = nil;
-    BOOL success = [_audioSession setActive:NO withOptions: AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&activationError];
-    NSLog(@"setUnactive - success: @%@, error: @%@", @(success), activationError);
-    _audioSession = nil;
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = @{}.mutableCopy;
-    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 
+    NSTimeInterval delayInSeconds = 0.5;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        NSError* activationError = nil;
+        BOOL success = [_audioSession setActive:NO withOptions: AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&activationError];
+        NSLog(@"setUnactive - success: @%@, error: @%@", @(success), activationError);
+        _audioSession = nil;
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = @{}.mutableCopy;
+        [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    });
 }
 
 - (void)layoutSubviews
