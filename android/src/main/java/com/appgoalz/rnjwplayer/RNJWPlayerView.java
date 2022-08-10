@@ -618,6 +618,11 @@ public class RNJWPlayerView extends RelativeLayout implements
             }
 
             configBuilder.playlist(playlist);
+
+            if (prop.hasKey("playlistIndex")) {
+                int playlistIndex = prop.getInt("playlistIndex");
+                configBuilder.playlistIndex(playlistIndex);
+            }
         }
 
         if (prop.hasKey("autostart")) {
