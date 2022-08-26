@@ -750,6 +750,12 @@ public class RNJWPlayerView extends RelativeLayout implements
             }
         }
 
+        // Key to decide whether to hide fullscreen buttons , defaulting to true
+        boolean hideFullscreenButtons = true;
+        if (prop.hasKey("hideFullscreenButtons")) {
+            hideFullscreenButtons = prop.getBoolean("hideFullscreenButtons");
+        }
+
         // Key to decide whether to show forward control and seekbar
         boolean hideSeekbarAndForwardConrol = false;
         if (prop.hasKey("hideSeekbarAndForwardConrol")) {
@@ -762,7 +768,7 @@ public class RNJWPlayerView extends RelativeLayout implements
 
         this.destroyPlayer();
         
-        mPlayerView = new RNJWPlayer(simpleContext,hideSeekbarAndForwardConrol);
+        mPlayerView = new RNJWPlayer(simpleContext,hideSeekbarAndForwardConrol, hideFullscreenButtons);
         
         mPlayerView.setFocusable(true);
         mPlayerView.setFocusableInTouchMode(true);
