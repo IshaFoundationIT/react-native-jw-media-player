@@ -19,12 +19,31 @@ public class RNJWPlayer extends JWPlayerView {
     public Boolean fullScreenOnLandscape = false;
     public Boolean exitFullScreenOnPortrait = false;
 
-    // Changed constructor to accept boolean for hideSeekbarAndForwardConrol
-    public RNJWPlayer(Context var1, Boolean hideSeekbarAndForwardConrol) {
+    // Changed constructor to accept boolean for hideSeekbarAndForwardConrol and hideFullscreenButtons
+    public RNJWPlayer(Context var1, Boolean hideSeekbarAndForwardConrol, Boolean hideFullscreenButtons) {
         super(var1);
         Log.d("RNJWPlayer", "hideSeekbarAndForwardConrol " + hideSeekbarAndForwardConrol);
         if(hideSeekbarAndForwardConrol){
             hideSeekbarAndForwardControl();
+        }
+        if(hideFullscreenButtons){
+            hideFullScreenButtons();
+        }
+    }
+
+    private void hideFullScreenButtons(){
+        // Remove fullscreen buttons from the parent view group.
+        ImageView exitFullscreenBtn = findViewById(R.id.controlbar_exit_fullscreen_btn);
+        ViewGroup parent = (ViewGroup) exitFullscreenBtn.getParent();
+        if (parent != null) {
+            Log.i("RNJWPlayer", "Removing exit fullscreen buttom image view");
+            parent.removeView(exitFullscreenBtn);
+        }
+        ImageView enterFullscreenBtn = findViewById(R.id.controlbar_enter_fullscreen_btn);
+        parent = (ViewGroup) enterFullscreenBtn.getParent();
+        if (parent != null) {
+            Log.i("RNJWPlayer", "Removing enter fullscreen buttom image view");
+            parent.removeView(enterFullscreenBtn);
         }
     }
 
