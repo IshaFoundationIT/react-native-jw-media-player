@@ -189,6 +189,7 @@ Running the example project:
 | **`controls`**                 | Should the control buttons show.                                                                                                                                                                                                                                                                                                                                        | `Boolean`                                                                                                                                                                                                              | `Android`                                   | `true`     |
 | **`repeat`**                   | Should the track repeat.                                                                                                                                                                                                                                                                                                                                                | `Boolean`                                                                                                                                                                                                              | `iOS && Android`                            | `false`    |
 | **`playlist`**                 | An array of playlistItems.                                                                                                                                                                                                                                                                                                                                              | `[playlistItem]` see [PlaylistItem](#PlaylistItem)]                                                                                                                                                                    | `iOS && Android`                            | `none`     |
+| **`playlistIndex`**            | A start index of playlist.                                                                                                                                                                                                                                                                                                                                              | `Number`                                                                                                                                                                                                               | `Android`                                   | `0`        |
 | **`nextUpStyle`**              | How the next up videos should be presented.                                                                                                                                                                                                                                                                                                                             | `{offsetSeconds: Int, offsetPercentage, Int}`                                                                                                                                                                          | `iOS && Android`                            | `none`     |
 | **`styling`**                  | All the stylings for the player see [Styling](#Styling) section.                                                                                                                                                                                                                                                                                                        | `Object`                                                                                                                                                                                                               | `iOS && Android`                            | `none`     |
 | **`advertising`**              | General Advertising settings on the player see [Advertising](#Advertising) section.                                                                                                                                                                                                                                                                                     | `Object`                                                                                                                                                                                                               | `iOS && Android`                            | `none`     |
@@ -322,6 +323,22 @@ Once the AudioTracks list is available, use getAudioTracks to return an array of
 Then use getCurrentAudioTrack or setCurrentAudioTrack(index) to view or change the current AudioTrack.
 
 This is all handled automatically if using the default player controls, but these functions are helpful if you're implementing custom controls.
+
+### QualityLevel
+
+Each QualityLevel object has the following keys:
+
+`index`: number
+
+`playListPosition`: number
+
+`bitRate`: number
+
+`height`: number
+
+`width`: number
+
+`label`: string
 
 ### Stretching
 
@@ -461,6 +478,9 @@ public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Conf
 | **`getCurrentAudioTrack`**  | Returns promise that returns the index of the current audio track in array returned by getAudioTracks                                                                                   | `none`                        |
 | **`setCurrentAudioTrack`**  | Sets the current audio track to the audio track at the specified index in the array returned by getAudioTracks                                                                          | `Int`                         |
 | **`setCurrentCaptions`**    | Turns off captions when argument is 0. Setting argument to another integer, sets captions to track at playlistItem.tracks[integer - 1]                                                  | `Int`                         |
+| **`setCurrentQuality`**     | Sets the player video quality level index.                                                                                                                                              | `Int`                         |
+| **`currentQuality`**        | Gets the player current video quality level index.                                                                                                                                      | `none`                        |
+| **`getQualityLevels`**      | Returns promise that returns an array of [QualityLevels](#QualityLevel).                                                                                                                 | `none`                        |
 
 ## Available callbacks
 
