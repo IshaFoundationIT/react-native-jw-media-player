@@ -170,7 +170,8 @@ declare module "react-native-jw-media-player" {
   }
   interface PropsType {
     config: Config;
-    controls: boolean;
+    style?: ViewStyle;
+    controls?: boolean;
     onPlayerReady?: (event: any) => void;
     // Added this prop to get callback whenever user touches the player overlay
     onDisplayClick?: (event: any) => void;
@@ -194,7 +195,7 @@ declare module "react-native-jw-media-player" {
     onControlBarVisible?: (event: any) => void;
     onPlaylistComplete?: (event: any) => void;
     onAudioTracks?: (event: any) => void;
-    style?: ViewStyle;
+    shouldComponentUpdate?: (nextProps: any, nextState: any) => boolean;
   }
 
   export default class JWPlayer extends React.Component<PropsType> {
