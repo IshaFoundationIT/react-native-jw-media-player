@@ -197,6 +197,9 @@ export default class JWPlayer extends Component {
     pause: PropTypes.func,
     setVolume: PropTypes.func,
     toggleSpeed: PropTypes.func,
+    setCurrentQuality: PropTypes.func,
+    currentQuality: PropTypes.func,
+    getQualityLevels: PropTypes.func,
     setSpeed: PropTypes.func,
     setPlaylistIndex: PropTypes.func,
     setControls: PropTypes.func,
@@ -217,6 +220,7 @@ export default class JWPlayer extends Component {
     onBuffer: PropTypes.func,
     onTime: PropTypes.func,
     onComplete: PropTypes.func,
+    onDisplayClick: PropTypes.func,
     onFullScreenRequested: PropTypes.func,
     onFullScreen: PropTypes.func,
     onFullScreenExitRequested: PropTypes.func,
@@ -283,6 +287,16 @@ export default class JWPlayer extends Component {
   toggleSpeed() {
     if (RNJWPlayerManager)
       RNJWPlayerManager.toggleSpeed(this.getRNJWPlayerBridgeHandle());
+  }
+
+  currentQuality() {
+    if (RNJWPlayerManager && Platform.OS === "android")
+      return RNJWPlayerManager.getCurrentQuality(this.getRNJWPlayerBridgeHandle());
+  }
+
+  setCurrentQuality(index) {
+    if (RNJWPlayerManager && Platform.OS === "android")
+      RNJWPlayerManager.setCurrentQuality(this.getRNJWPlayerBridgeHandle(), index);
   }
 
   setSpeed(speed) {
@@ -422,6 +436,20 @@ export default class JWPlayer extends Component {
           this.getRNJWPlayerBridgeHandle()
         );
         return state;
+      } catch (e) {
+        console.error(e);
+        return null;
+      }
+    }
+  }
+
+  async getQualityLevels() {
+    if (RNJWPlayerManager && Platform.OS === "android") {
+      try {
+        var qualityLevels = await RNJWPlayerManager.getQualityLevels(
+            this.getRNJWPlayerBridgeHandle()
+        );
+        return qualityLevels;
       } catch (e) {
         console.error(e);
         return null;
