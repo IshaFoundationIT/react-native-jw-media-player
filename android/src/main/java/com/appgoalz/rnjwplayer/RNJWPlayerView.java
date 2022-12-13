@@ -258,7 +258,17 @@ public class RNJWPlayerView extends RelativeLayout implements
     }
 
     public Activity getActivity() {
-        return (Activity) getContext();
+        if (!contextHasBug(mAppContext.getCurrentActivity())) {
+            return mAppContext.getCurrentActivity();
+        } else if (contextHasBug(mThemedReactContext)) {
+            if (!contextHasBug(mThemedReactContext.getCurrentActivity())) {
+                return mThemedReactContext.getCurrentActivity();
+            } else if (!contextHasBug(mThemedReactContext.getApplicationContext())) {
+                return (Activity) mThemedReactContext.getApplicationContext();
+            }
+        }
+
+        return mThemedReactContext.getReactApplicationContext().getCurrentActivity();
     }
 
     public void destroyPlayer() {
@@ -1255,7 +1265,7 @@ public class RNJWPlayerView extends RelativeLayout implements
         event.putString("device", castEvent.getDeviceName());
         event.putBoolean("active", castEvent.isActive());
         event.putBoolean("available", castEvent.isAvailable());
-        getReactContext().getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onCasting", event);
+        getReactContext().getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "topCasting", event);
     }
 
     // LifecycleEventListener
