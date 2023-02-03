@@ -7,7 +7,7 @@
 #import <UIKit/UIKit.h>
 #import <AVKit/AVKit.h>
 #import <JWPlayerKit/JWPlayerKit-swift.h>
-#import <GoogleCast/GoogleCast.h>
+//#import <GoogleCast/GoogleCast.h>
 #import "RNJWPlayerViewController.h"
 
 @class RNJWPlayerViewController;
@@ -96,7 +96,7 @@
 /* casting methods */
 - (void)setUpCastController;
 - (void)presentCastDialog;
-- (GCKCastState)castState;
+//- (GCKCastState)castState;
 - (JWCastingDevice*)connectedDevice;
 - (NSArray <JWCastingDevice *>*)availableDevices;
 

@@ -1318,48 +1318,50 @@
 
 - (void)presentCastDialog
 {
-    [GCKCastContext.sharedInstance presentCastDialog];
+//    [GCKCastContext.sharedInstance presentCastDialog];
 }
 
 - (void)startDiscovery
 {
-    [[GCKCastContext.sharedInstance discoveryManager] startDiscovery];
+//    [[GCKCastContext.sharedInstance discoveryManager] startDiscovery];
 }
 
 - (void)stopDiscovery
 {
-    [[GCKCastContext.sharedInstance discoveryManager] stopDiscovery];
+//    [[GCKCastContext.sharedInstance discoveryManager] stopDiscovery];
 }
 
 - (BOOL)discoveryActive
 {
-    return [[GCKCastContext.sharedInstance discoveryManager] discoveryActive];
+//    return [[GCKCastContext.sharedInstance discoveryManager] discoveryActive];
+    return false;
 }
 
 - (BOOL)hasDiscoveredDevices
 {
-    return [[GCKCastContext.sharedInstance discoveryManager] hasDiscoveredDevices];
+//    return [[GCKCastContext.sharedInstance discoveryManager] hasDiscoveredDevices];
+    return false;
 }
 
-- (GCKDiscoveryState)discoveryState
-{
-    return [[GCKCastContext.sharedInstance discoveryManager] discoveryState];
-}
-
-- (void)setPassiveScan:(BOOL)passive
-{
-    [[GCKCastContext.sharedInstance discoveryManager] setPassiveScan:passive];
-}
-
-- (GCKCastState)castState
-{
-    return [GCKCastContext.sharedInstance castState];
-}
-
-- (NSUInteger)deviceCount
-{
-    return [[GCKCastContext.sharedInstance discoveryManager] deviceCount];
-}
+//- (GCKDiscoveryState)discoveryState
+//{
+//    return [[GCKCastContext.sharedInstance discoveryManager] discoveryState];
+//}
+//
+//- (void)setPassiveScan:(BOOL)passive
+//{
+//    [[GCKCastContext.sharedInstance discoveryManager] setPassiveScan:passive];
+//}
+//
+//- (GCKCastState)castState
+//{
+//    return [GCKCastContext.sharedInstance castState];
+//}
+//
+//- (NSUInteger)deviceCount
+//{
+//    return [[GCKCastContext.sharedInstance discoveryManager] deviceCount];
+//}
 
 - (NSArray <JWCastingDevice *>*)availableDevices
 {
