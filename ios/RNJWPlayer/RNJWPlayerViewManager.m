@@ -380,9 +380,7 @@ RCT_REMAP_METHOD(castState,
             NSError *error = [[NSError alloc] init];
             reject(@"no_player", @"There is no player", error);
         } else {
-//            resolve([NSNumber numberWithInt:[view castState]]);
-            NSError *error = [[NSError alloc] init];
-            reject(@"no_player", @"There is no Cast SDK", error);
+            resolve([NSNumber numberWithInt:[view castState]]);
         }
     }];
 }
