@@ -96,7 +96,7 @@
 /* casting methods */
 - (void)setUpCastController;
 - (void)presentCastDialog;
-//- (GCKCastState)castState;
+- (GCKCastState)castState;
 - (JWCastingDevice*)connectedDevice;
 - (NSArray <JWCastingDevice *>*)availableDevices;
 
