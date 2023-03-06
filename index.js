@@ -7,7 +7,7 @@ import {
   findNodeHandle,
 } from "react-native";
 import PropTypes from "prop-types";
-import _ from 'lodash';
+import _ from "lodash";
 
 const RNJWPlayerManager =
   Platform.OS === "ios"
@@ -61,16 +61,18 @@ export default class JWPlayer extends Component {
         "PlayAndRecord",
         "MultiRoute",
       ]),
-      categoryOptions: PropTypes.arrayOf(PropTypes.oneOf([
-        "MixWithOthers",
-        "DuckOthers",
-        "AllowBluetooth",
-        "DefaultToSpeaker",
-        "InterruptSpokenAudioAndMix",
-        "AllowBluetoothA2DP",
-        "AllowAirPlay",
-        "OverrideMutedMicrophone",
-      ])),
+      categoryOptions: PropTypes.arrayOf(
+        PropTypes.oneOf([
+          "MixWithOthers",
+          "DuckOthers",
+          "AllowBluetooth",
+          "DefaultToSpeaker",
+          "InterruptSpokenAudioAndMix",
+          "AllowBluetoothA2DP",
+          "AllowAirPlay",
+          "OverrideMutedMicrophone",
+        ])
+      ),
       mode: PropTypes.oneOf([
         "Default",
         "VoiceChat",
@@ -193,6 +195,7 @@ export default class JWPlayer extends Component {
     }),
     onPlayerReady: PropTypes.func,
     onPlaylist: PropTypes.func,
+    changePlaylist: PropTypes.func,
     play: PropTypes.func,
     pause: PropTypes.func,
     setVolume: PropTypes.func,
@@ -203,6 +206,7 @@ export default class JWPlayer extends Component {
     setSpeed: PropTypes.func,
     setPlaylistIndex: PropTypes.func,
     setControls: PropTypes.func,
+    setVisibility: PropTypes.func,
     setLockScreenControls: PropTypes.func,
     setFullscreen: PropTypes.func,
     setUpCastController: PropTypes.func,
@@ -211,6 +215,7 @@ export default class JWPlayer extends Component {
     availableDevices: PropTypes.func,
     castState: PropTypes.func,
     seekTo: PropTypes.func,
+    loadPlaylist: PropTypes.func,
     onBeforePlay: PropTypes.func,
     onBeforeComplete: PropTypes.func,
     onPlay: PropTypes.func,
@@ -220,7 +225,6 @@ export default class JWPlayer extends Component {
     onBuffer: PropTypes.func,
     onTime: PropTypes.func,
     onComplete: PropTypes.func,
-    onDisplayClick: PropTypes.func,
     onFullScreenRequested: PropTypes.func,
     onFullScreen: PropTypes.func,
     onFullScreenExitRequested: PropTypes.func,
@@ -256,7 +260,7 @@ export default class JWPlayer extends Component {
     var thisConfig = this.props.config || {};
 
     var result = !_.isEqualWith(config, thisConfig, (value1, value2, key) => {
-        return key === "startTime" ? true : undefined;
+      return key === "startTime" ? true : undefined;
     });
 
     return result || controls !== this.props.controls;
@@ -276,6 +280,14 @@ export default class JWPlayer extends Component {
       RNJWPlayerManager.pause(this.getRNJWPlayerBridgeHandle());
   }
 
+  changePlaylist(fileUrl) {
+    if (RNJWPlayerManager)
+      RNJWPlayerManager.changePlaylist(
+        this.getRNJWPlayerBridgeHandle(),
+        fileUrl
+      );
+  }
+
   play() {
     if (RNJWPlayerManager)
       RNJWPlayerManager.play(this.getRNJWPlayerBridgeHandle());
@@ -286,19 +298,24 @@ export default class JWPlayer extends Component {
       RNJWPlayerManager.stop(this.getRNJWPlayerBridgeHandle());
   }
 
-  toggleSpeed() {
-    if (RNJWPlayerManager)
-      RNJWPlayerManager.toggleSpeed(this.getRNJWPlayerBridgeHandle());
-  }
-
   currentQuality() {
     if (RNJWPlayerManager && Platform.OS === "android")
-      return RNJWPlayerManager.getCurrentQuality(this.getRNJWPlayerBridgeHandle());
+      return RNJWPlayerManager.getCurrentQuality(
+        this.getRNJWPlayerBridgeHandle()
+      );
   }
 
   setCurrentQuality(index) {
     if (RNJWPlayerManager && Platform.OS === "android")
-      RNJWPlayerManager.setCurrentQuality(this.getRNJWPlayerBridgeHandle(), index);
+      RNJWPlayerManager.setCurrentQuality(
+        this.getRNJWPlayerBridgeHandle(),
+        index
+      );
+  }
+
+  toggleSpeed() {
+    if (RNJWPlayerManager)
+      RNJWPlayerManager.toggleSpeed(this.getRNJWPlayerBridgeHandle());
   }
 
   setSpeed(speed) {
@@ -319,6 +336,15 @@ export default class JWPlayer extends Component {
       RNJWPlayerManager.setControls(this.getRNJWPlayerBridgeHandle(), show);
   }
 
+  setVisibility(visibility, controls) {
+    if (RNJWPlayerManager && Platform.OS === "ios")
+      RNJWPlayerManager.setVisibility(
+        this.getRNJWPlayerBridgeHandle(),
+        visibility,
+        controls
+      );
+  }
+
   setLockScreenControls(show) {
     if (RNJWPlayerManager && Platform.OS === "ios")
       RNJWPlayerManager.setLockScreenControls(
@@ -330,6 +356,14 @@ export default class JWPlayer extends Component {
   seekTo(time) {
     if (RNJWPlayerManager)
       RNJWPlayerManager.seekTo(this.getRNJWPlayerBridgeHandle(), time);
+  }
+
+  loadPlaylist(playlistItems) {
+    if (RNJWPlayerManager)
+      RNJWPlayerManager.loadPlaylist(
+        this.getRNJWPlayerBridgeHandle(),
+        playlistItems
+      );
   }
 
   setFullscreen(fullscreen) {
@@ -403,6 +437,20 @@ export default class JWPlayer extends Component {
     }
   }
 
+  async getQualityLevels() {
+    if (RNJWPlayerManager && Platform.OS === "android") {
+      try {
+        var qualityLevels = await RNJWPlayerManager.getQualityLevels(
+          this.getRNJWPlayerBridgeHandle()
+        );
+        return qualityLevels;
+      } catch (e) {
+        console.error(e);
+        return null;
+      }
+    }
+  }
+
   async availableDevices() {
     if (RNJWPlayerManager && Platform.OS === "ios") {
       try {
@@ -438,20 +486,6 @@ export default class JWPlayer extends Component {
           this.getRNJWPlayerBridgeHandle()
         );
         return state;
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
-  }
-
-  async getQualityLevels() {
-    if (RNJWPlayerManager && Platform.OS === "android") {
-      try {
-        var qualityLevels = await RNJWPlayerManager.getQualityLevels(
-            this.getRNJWPlayerBridgeHandle()
-        );
-        return qualityLevels;
       } catch (e) {
         console.error(e);
         return null;
@@ -515,6 +549,12 @@ export default class JWPlayer extends Component {
   }
 
   render() {
-    return <RNJWPlayer ref={player => this[this.ref_key] = player} key={this.ref_key} {...this.props} />;
+    return (
+      <RNJWPlayer
+        ref={(player) => (this[this.ref_key] = player)}
+        key={this.ref_key}
+        {...this.props}
+      />
+    );
   }
 }

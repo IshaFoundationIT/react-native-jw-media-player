@@ -104,5 +104,7 @@
 -(void)setLicense:(id)license;
 -(void)toggleUIGroup:(UIView*)view :(NSString*)name :(NSString*)ofSubview :(BOOL)show;
 -(void)startDeinitProcess;
+-(JWPlayerItem*)getPlayerItem:item;
+- (void)setVisibility:(BOOL)isVisible forControls:(NSArray* _Nonnull)controls;
 
 @end
