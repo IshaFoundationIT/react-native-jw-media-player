@@ -479,6 +479,11 @@ export default class JWPlayer extends Component {
     }
   }
 
+  endCastSession() {
+    if (RNJWPlayerManager && Platform.OS === "android")
+      RNJWPlayerManager.endCastSession(this.getRNJWPlayerBridgeHandle());
+  }
+
   async playerState() {
     if (RNJWPlayerManager) {
       try {

@@ -593,6 +593,13 @@ typedef NS_ENUM(NSUInteger, GCKCastState) {
 };
 ```
 
+##### For Android
+
+| Func                  | Description                       | Argument                                      |
+| -------------------- | --------------------------------- | --------------------------------------------- |
+| **`endCastSession`** | To ends the current cast session. | `none`                                       |
+
+
 #### Available callbacks
 
 ##### For iOS

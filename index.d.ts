@@ -232,6 +232,7 @@ declare module "react-native-jw-media-player" {
     connectedDevice(): Promise<CastingDevice | null>;
     availableDevices(): Promise<CastingDevice[] | null>;
     castState(): Promise<number | null>;
+    endCastSession(): void;
     playerState(): Promise<number | null>;
     getAudioTracks(): Promise<AudioTrack[] | null>;
     getCurrentAudioTrack(): Promise<number | null>;

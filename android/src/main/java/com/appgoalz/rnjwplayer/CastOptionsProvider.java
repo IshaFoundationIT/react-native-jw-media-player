@@ -35,6 +35,9 @@ public class CastOptionsProvider implements OptionsProvider {
 
         final CastMediaOptions mediaOptions = new CastMediaOptions.Builder()
                 .setNotificationOptions(notificationOptions)
+
+                .setMediaSessionEnabled(true) //added to test
+
                 .build();
 
         final LaunchOptions launchOptions = new LaunchOptions.Builder()
@@ -45,6 +48,11 @@ public class CastOptionsProvider implements OptionsProvider {
                 .setReceiverApplicationId(DEFAULT_APPLICATION_ID)
                 .setCastMediaOptions(mediaOptions)
                 .setLaunchOptions(launchOptions)
+
+                .setStopReceiverApplicationWhenEndingSession(true) //added to test
+                .setResumeSavedSession(true) //added to test
+                .setEnableReconnectionService(true) //added to test
+
                 .build();
     }
 
