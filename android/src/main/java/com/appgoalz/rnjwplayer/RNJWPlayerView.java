@@ -32,6 +32,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.google.android.gms.cast.framework.CastContext;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.jwplayer.pub.api.JWPlayer;
@@ -197,6 +198,7 @@ public class RNJWPlayerView extends RelativeLayout implements
     private final ReactApplicationContext mAppContext;
 
     private ThemedReactContext mThemedReactContext;
+    private CastContext mCastContext;
 
     private MediaServiceController mMediaServiceController;
 
@@ -244,6 +246,10 @@ public class RNJWPlayerView extends RelativeLayout implements
 
         mThemedReactContext = reactContext;
 
+        if (Util.isGoogleApiAvailable(mAppContext)) {
+            mCastContext = CastContext.getSharedInstance(mAppContext);
+        }
+
         mActivity = (ReactActivity) getActivity();
         if (mActivity != null) {
             mWindow = mActivity.getWindow();
@@ -260,6 +266,10 @@ public class RNJWPlayerView extends RelativeLayout implements
 
     public ThemedReactContext getReactContext() {
         return mThemedReactContext;
+    }
+
+    public CastContext getCastContext() {
+        return mCastContext;
     }
 
     public Activity getActivity() {
@@ -994,6 +1004,12 @@ public class RNJWPlayerView extends RelativeLayout implements
             } else {
                 lowerApiOnAudioFocus(focusChange);
             }
+        }
+    }
+
+    public void endCastSession() {
+        if (mCastContext != null) {
+            mCastContext.getSessionManager().endCurrentSession(true);
         }
     }
 
