@@ -208,6 +208,7 @@ declare module "react-native-jw-media-player" {
     onPlaylistComplete?: (event: any) => void;
     onAudioTracks?: (event: any) => void;
     shouldComponentUpdate?: (nextProps: any, nextState: any) => boolean;
+    onCasting?: (event: any) => void;
   }
 
   export default class JWPlayer extends React.Component<PropsType> {
