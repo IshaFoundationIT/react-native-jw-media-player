@@ -618,8 +618,8 @@ typedef NS_ENUM(NSUInteger, GCKCastState) {
 
 ##### For Android
 
-| Func            | Description            | Payload                                                 |
-| --------------- | ---------------------- | ------------------------------------------------------- |
-| **`onCasting`** | Casting event occurred | `{active: Boolean, available: Boolean, device: String}` |
+| Func            | Description                                    | Payload                                                 |
+| --------------- | ---------------------------------------------- | ------------------------------------------------------- |
+| **`onCasting`** | Event occurred when casting Started and ends.  | `{active: Boolean, available: Boolean, device: String}` |
 
 #### [CHANGELOG](https://github.com/chaimPaneth/react-native-jw-media-player/releases)
