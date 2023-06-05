@@ -13,6 +13,7 @@
 		2AA52BE826C144B200AD26AE /* RNJWPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AA52BE426C144B200AD26AE /* RNJWPlayerView.m */; };
 		3BC75FCC1E43B1DB0011FBAA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BC75FCB1E43B1DB0011FBAA /* UIKit.framework */; };
 		3BC75FD11E43B3090011FBAA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BC75FD01E43B3090011FBAA /* Foundation.framework */; };
+		FBC054882A25B24B00101E97 /* RNJWPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FBC054862A25B24B00101E97 /* RNJWPlayerViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +39,8 @@
 		2AA52BE426C144B200AD26AE /* RNJWPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNJWPlayerView.m; path = RNJWPlayer/RNJWPlayerView.m; sourceTree = "<group>"; };
 		3BC75FCB1E43B1DB0011FBAA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3BC75FD01E43B3090011FBAA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FBC054862A25B24B00101E97 /* RNJWPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNJWPlayerViewController.m; path = RNJWPlayer/RNJWPlayerViewController.m; sourceTree = "<group>"; };
+		FBC054872A25B24B00101E97 /* RNJWPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNJWPlayerViewController.h; path = RNJWPlayer/RNJWPlayerViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +80,8 @@
 			children = (
 				2AA52BE126C144B200AD26AE /* RNJWPlayerView.h */,
 				2AA52BE426C144B200AD26AE /* RNJWPlayerView.m */,
+				FBC054872A25B24B00101E97 /* RNJWPlayerViewController.h */,
+				FBC054862A25B24B00101E97 /* RNJWPlayerViewController.m */,
 				2AA52BE326C144B200AD26AE /* RNJWPlayerViewManager.h */,
 				2AA52BE226C144B200AD26AE /* RNJWPlayerViewManager.m */,
 				2A5DC7BE272B5DB6003BF3E4 /* RCTConvert+RNJWPlayer.h */,
@@ -145,6 +150,7 @@
 			files = (
 				2AA52BE826C144B200AD26AE /* RNJWPlayerView.m in Sources */,
 				2A5DC7C0272B5DB6003BF3E4 /* RCTConvert+RNJWPlayer.m in Sources */,
+				FBC054882A25B24B00101E97 /* RNJWPlayerViewController.m in Sources */,
 				2AA52BE726C144B200AD26AE /* RNJWPlayerViewManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
