@@ -772,7 +772,7 @@ public class RNJWPlayerView extends RelativeLayout implements
 
         this.destroyPlayer();
         
-        mPlayerView = new RNJWPlayer(simpleContext);
+        mPlayerView = new RNJWPlayer(simpleContext,hideSeekbarAndForwardConrol, hideFullscreenButtons);
         
         mPlayerView.setFocusable(true);
         mPlayerView.setFocusableInTouchMode(true);
