@@ -707,6 +707,7 @@
         });
         _playerViewController.view.frame = self.frame;
         [self addSubview:_playerViewController.view];
+        [_playerViewController setDelegates];
     }
     
     id interfaceBehavior = config[@"interfaceBehavior"];
@@ -792,6 +793,7 @@
         [_playerViewController.view removeFromSuperview];
         [_playerViewController removeFromParentViewController];
         [_playerViewController willMoveToParentViewController:nil];
+        [_playerViewController removeDelegates];
         _playerViewController = nil;
     }
 }
