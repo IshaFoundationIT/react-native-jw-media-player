@@ -43,7 +43,6 @@
         _parentView.onPlayerReady(@{});
     }
     
-    
     if (_parentView.pendingConfig && _parentView.currentConfig) {
         [_parentView setConfig:_parentView.currentConfig];
     }
