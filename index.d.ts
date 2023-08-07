@@ -177,6 +177,11 @@ declare module "react-native-jw-media-player" {
     viewOnly?: boolean;
     enableLockScreenControls: boolean;
     pipEnabled: boolean;
+
+    /** Isha Foundation : Custom Changes : BEGIN ----------------- */
+    hideSeekbarAndForwardConrol?: Boolean; // Isha custom change
+    hideFullscreenButtons?: Boolean; // Isha custom change
+    /** Isha Foundation : Custom Changes : END ----------------- */
   }
   interface PropsType {
     config: Config;
