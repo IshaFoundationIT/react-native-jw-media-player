@@ -725,6 +725,25 @@ public class RNJWPlayerView extends RelativeLayout implements
             configBuilder.uiConfig(hideJwControlbarUiConfig);
         }
 
+    /**
+     * Isha Foundation Custom Changes Begin : ------------------------------------------------
+     */
+         // Key to decide whether to hide fullscreen buttons , defaulting to true
+        boolean hideFullscreenButtons = true;
+        if (prop.hasKey("hideFullscreenButtons")) {
+            hideFullscreenButtons = prop.getBoolean("hideFullscreenButtons");
+        }
+
+        // Key to decide whether to show forward control and seekbar
+        boolean hideSeekbarAndForwardConrol = false;
+        if (prop.hasKey("hideSeekbarAndForwardConrol")) {
+            hideSeekbarAndForwardConrol = prop.getBoolean("hideSeekbarAndForwardConrol");
+        }
+
+    /**
+     * Isha Foundation Custom Changes END : ------------------------------------------------
+     */
+
         PlayerConfig playerConfig = configBuilder.build();
 
         Context simpleContext = getNonBuggyContext(getReactContext(), getAppContext());
