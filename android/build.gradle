@@ -49,7 +49,7 @@ allprojects {
 }
 
 def jwPlayerVersion = "4.13.0"
-def exoplayerVersion = "2.18.7"
+def exoplayerVersion = "2.18.1"
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
