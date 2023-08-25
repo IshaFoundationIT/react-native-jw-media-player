@@ -48,7 +48,7 @@ allprojects {
     }
 }
 
-def jwPlayerVersion = "4.13.0"
+def jwPlayerVersion = "4.8.0"
 def exoplayerVersion = "2.18.1"
 
 dependencies {
@@ -64,7 +64,8 @@ dependencies {
     // Ad dependencies
     implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.29.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
-    implementation 'com.google.android.gms:play-services-cast-framework:21.3.0'
+//    commenting out for now casting is working even without this dependency.
+//    implementation 'com.google.android.gms:play-services-cast-framework:21.3.0'
 
     // ExoPlayer dependencies
     implementation "com.google.android.exoplayer:exoplayer-core:${safeExtGet('exoplayerVersion', exoplayerVersion)}"
