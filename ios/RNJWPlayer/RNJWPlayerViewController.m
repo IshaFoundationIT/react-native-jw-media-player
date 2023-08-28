@@ -441,17 +441,18 @@
         
         NSDictionary* itemDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                   file, @"file",
-                                  item.mediaId, @"mediaId",
                                   item.title, @"title",
                                   item.description, @"description",
                                   item.posterImage.absoluteString, @"image",
                                   @(item.startTime), @"startTime",
+                                  schedDict, @"adSchedule",
+                                  item.mediaId, @"mediaId",
                                   item.vmapURL.absoluteString, @"adVmap",
                                   item.recommendations.absoluteString, @"recommendations",
                                   sourceDict, @"sources",
-                                  schedDict, @"adSchedule",
                                   trackDict, @"tracks",
                                   nil];
+        //throwing exception because of last 5 properties.
 
         NSError *error;
         NSData *data = [NSJSONSerialization dataWithJSONObject:itemDict options:NSJSONWritingPrettyPrinted error: &error];
@@ -499,17 +500,18 @@
             
             NSDictionary* itemDict = [NSDictionary dictionaryWithObjectsAndKeys:
                                       file, @"file",
-                                      item.mediaId, @"mediaId",
                                       item.title, @"title",
                                       item.description, @"description",
                                       item.posterImage.absoluteString, @"image",
                                       @(item.startTime), @"startTime",
+                                      schedDict, @"adSchedule",
+                                      item.mediaId, @"mediaId",
                                       item.vmapURL.absoluteString, @"adVmap",
                                       item.recommendations.absoluteString, @"recommendations",
                                       sourceDict, @"sources",
-                                      schedDict, @"adSchedule",
                                       trackDict, @"tracks",
                                       nil];
+            //throwing exception because of last 5 properties.
             
             [playlistArray addObject:itemDict];
         }
