@@ -129,4 +129,6 @@ RCT_EXTERN_METHOD(loadPlaylist: (nonnull NSNumber *)reactTag: (nonnull NSArray *
 
 RCT_EXTERN_METHOD(setFullscreen: (nonnull NSNumber *)reactTag: (BOOL)fullscreen)
 
+RCT_EXTERN_METHOD(setMute: (nonnull NSNumber *)reactTag: (BOOL)isMuted)
+
 @end

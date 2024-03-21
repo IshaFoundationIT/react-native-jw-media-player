@@ -187,6 +187,23 @@ class RNJWPlayerViewManager: RCTViewManager {
         }
     }
 
+    @objc func setMute(_ reactTag: NSNumber, _ isMuted: Bool) {
+        self.bridge.uiManager.addUIBlock { uiManager, viewRegistry in
+            guard let view = viewRegistry?[reactTag] as? RNJWPlayerView else {
+                print("Invalid view returned from registry, expecting RNJWPlayerView, got: \(String(describing: viewRegistry?[reactTag]))")
+                return
+            }
+
+            let volume: Int = isMuted ? 0 : 100 // Determine the volume based on isMuted
+
+            if let playerView = view.playerView {
+                playerView.player.volume = volume
+            } else if let playerViewController = view.playerViewController {
+                playerViewController.player.volume = volume
+            }
+        }
+    }
+
 
     @objc func togglePIP(_ reactTag: NSNumber) {
         self.bridge.uiManager.addUIBlock { uiManager, viewRegistry in
