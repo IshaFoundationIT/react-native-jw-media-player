@@ -230,6 +230,7 @@ declare module "react-native-jw-media-player" {
     seekTo(time: number): void;
     loadPlaylist(playlistItems: PlaylistItem[]): void;
     setFullscreen(fullScreen: boolean): void;
+    setMute(isMuted: boolean): void;
     position(): Promise<number>;
     setUpCastController(): void;
     presentCastDialog(): void;
