@@ -393,6 +393,24 @@ public class RNJWPlayerModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setMute(final int reactTag, final boolean isMuted) {
+    try {
+      UIManagerModule uiManager = mReactContext.getNativeModule(UIManagerModule.class);
+      uiManager.addUIBlock(new UIBlock() {
+        public void execute (NativeViewHierarchyManager nvhm) {
+          RNJWPlayerView playerView = (RNJWPlayerView) nvhm.resolveView(reactTag);
+
+          if (playerView != null && playerView.mPlayerView != null) {
+            playerView.mPlayerView.getPlayer().setMute(isMuted);
+          }
+        }
+      });
+    } catch (IllegalViewOperationException e) {
+      throw e;
+    }
+  }
+
+  @ReactMethod
   public void setVolume(final int reactTag, final int volume) {
     try {
       UIManagerModule uiManager = mReactContext.getNativeModule(UIManagerModule.class);

@@ -327,6 +327,7 @@ export default class JWPlayer extends Component {
 		setVisibility: PropTypes.func,
 		setLockScreenControls: PropTypes.func,
 		setFullscreen: PropTypes.func,
+		setMute: PropTypes.func,
 		setUpCastController: PropTypes.func,
 		presentCastDialog: PropTypes.func,
 		connectedDevice: PropTypes.func,
@@ -516,6 +517,14 @@ export default class JWPlayer extends Component {
 				fullscreen
 			);
 	}
+
+	setMute(isMuted){
+	    if (RNJWPlayerManager)
+	      RNJWPlayerManager.setMute(
+	        this.getRNJWPlayerBridgeHandle(),
+	        isMuted
+	      );
+  	}
 
 	setVolume(value) {
 		if (RNJWPlayerManager) {
