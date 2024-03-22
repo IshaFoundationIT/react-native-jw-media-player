@@ -610,13 +610,13 @@ RCT_EXPORT_METHOD(setMute: (nonnull NSNumber *)reactTag :(BOOL)isMuted) {
             return;
         }
 
-        // Directly use integer values for volume
-        int volume = isMuted ? 0 : 100;
+/// From JWPlayer - The volume relative to the volume of the device. All values are clamped from 0.0 (mute) to 1.0 (current volume of the device).
+        CGFloat volume = isMuted ? 0.0 : 1.0;
 
         if (view.playerView) {
-            [view.playerView.player setVolume:(float)volume];
+            [view.playerView.player setVolume:volume];
         } else if (view.playerViewController) {
-            [view.playerViewController.player setVolume:(float)volume];
+            [view.playerViewController.player setVolume:volume];
         }
     }];
 }
