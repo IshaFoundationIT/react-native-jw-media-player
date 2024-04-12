@@ -9,14 +9,16 @@ declare module "react-native-jw-media-player" {
     language: string;
     name: string;
   }
+
   export interface QualityLevel {
-    playListPosition: number;
+    playlistPosition: number;
     bitRate: number;
     label: string;
     height: number;
     width: number;
     index: number;
   }
+
   interface CastingDevice {
     name?: string;
     identifier?: string;
@@ -31,18 +33,70 @@ declare module "react-native-jw-media-player" {
     label: string;
     default?: boolean;
   }
+  interface JWAdSettings {
+    allowsBackgroundPlayback?: boolean;
+    // Add other ad settings properties as needed
+  }
+  interface IMASettings {
+    locale?: string;
+    ppid?: string;
+    maxRedirects?: number;
+    sessionID?: string;
+    debugMode?: boolean;
+  }
   interface AdSchedule {
     tag: string;
     offset: string;
   }
-  type ClientTypes = "vast" | "ima" | "ima_dai";
-  interface Advertising {
-    adSchedule?: AdSchedule;
-    adVmap?: string;
-    tag?: string;
-    openBrowserOnAdClick?: boolean;
-    adClient?: ClientTypes;
+  // interface CompanionAdSlot {
+  //   viewId: string; // Reference to a UIView in the application
+  //   size?: { width: number; height: number };
+  // }
+  interface GoogleDAIStream {
+    videoID?: string;
+    cmsID?: string;
+    assetKey?: string;
+    apiKey?: string;
+    adTagParameters?: { [key: string]: string };
   }
+  interface AdRule {
+    startOn: number;
+    frequency: number;
+    timeBetweenAds: number;
+    startOnSeek: 'none' | 'pre'; // Mapped from JWAdShownOnSeek
+  }
+  // interface FriendlyObstruction {
+  //   viewId: string;
+  //   purpose: 'mediaControls' | 'closeAd' | 'notVisible' | 'other'; // Mapped from JWFriendlyObstructionPurpose
+  //   reason?: string;
+  // }
+  type ClientTypes = "vast" | "ima" | "ima_dai";
+  interface VASTAdvertising {
+    adSchedule?: AdSchedule[];
+    adVmap?: string;
+    tag?: string; // Vast xml url
+    openBrowserOnAdClick?: boolean;
+    adClient: "vast";
+    adRules?: AdRule;
+    adSettings?: JWAdSettings;
+  }
+  interface IMAAdvertising {
+    adSchedule?: AdSchedule[];
+    adVmap?: string;
+    tag?: string; // Vast xml url
+    adClient: "ima";
+    adRules?: AdRule;
+    imaSettings?: IMASettings;
+    // companionAdSlots?: CompanionAdSlot[];
+    // friendlyObstructions?: FriendlyObstruction[];
+  }
+  interface IMA_DAIAdvertising {
+    adClient: "ima_dai";
+    imaSettings?: IMASettings;
+    // friendlyObstructions?: FriendlyObstruction[];
+    googleDAIStream?: GoogleDAIStream;
+  }
+  type Advertising = VASTAdvertising | IMAAdvertising | IMA_DAIAdvertising;
   interface PlaylistItem {
     file: string;
     sources?: Source[];
@@ -50,7 +104,7 @@ declare module "react-native-jw-media-player" {
     title?: string;
     description?: string;
     mediaId?: string;
-    adSchedule?: AdSchedule;
+    adSchedule?: AdSchedule[];
     adVmap?: string;
     tracks?: Track[];
     recommendations?: string;
@@ -165,11 +219,11 @@ declare module "react-native-jw-media-player" {
     portraitOnExitFullScreen?: boolean;
     exitFullScreenOnPortrait?: boolean;
     playlist?: PlaylistItem[];
-    playlistIndex?: number;
     stretching?: string;
     related?: Related;
     preload?: Preloads;
     interfaceBehavior?: InterfaceBehaviors;
+    interfaceFadeDelay?: number;
     hideUIGroups?: UIGroups[];
     processSpcUrl?: string;
     fairplayCertUrl?: string;
@@ -179,37 +233,115 @@ declare module "react-native-jw-media-player" {
     pipEnabled: boolean;
 
     /** Isha Foundation : Custom Changes : BEGIN ----------------- */
+    playlistIndex?: number; // Isha custom change
     hideSeekbarAndForwardConrol?: Boolean; // Isha custom change
     hideFullscreenButtons?: Boolean; // Isha custom change
     /** Isha Foundation : Custom Changes : END ----------------- */
   }
+  interface BaseEvent<T> {
+    nativeEvent: T;
+  }
+  interface SeekEventProps {
+    position: number;
+    offset: number;
+  }
+  interface SeekedEventProps {
+    position: number;
+  }
+  interface RateChangedEventProps {
+    rate: number;
+    at: number;
+  }
+  interface TimeEventProps {
+    position: number;
+    duration: number;
+  }
+  interface ControlBarVisibleEventProps {
+    visible: boolean;
+  }
+  interface PlaylistEventProps {
+    playlist: PlaylistItem[]
+  }
+  interface PlaylistItemEventProps {
+    playlistItem: PlaylistItem
+  }
+  interface PlayerErrorEventProps {
+    code: string;
+    error: string;
+  }
+  interface PlayerWarningEventProps {
+    code: string;
+    warning: string;
+  }
+  interface AdEventProps {
+    client?: string;
+    reason?: string;
+    type: number;
+  }
+  type NativeError = (event: BaseEvent<PlayerErrorEventProps>) => void;
+  type NativeWarning = (event: BaseEvent<PlayerWarningEventProps>) => void;
+
+  //interface OLDPropsType {
+  //     config: Config;
+  //     style?: ViewStyle;
+  //     controls?: boolean;
+  //     onPlayerReady?: (event: any) => void;
+  //     // Added this prop to get callback whenever user touches the player overlay
+  //     onDisplayClick?: (event: any) => void;
+  //     onPlaylist?: (playlist: PlaylistItem[]) => void;
+  //     onBeforePlay?: (event: any) => void;
+  //     onBeforeComplete?: (event: any) => void;
+  //     onPlay?: (event: any) => void;
+  //     onPause?: (event: any) => void;
+  //     onSetupPlayerError?: (setupPlayerError: { error: string }) => void;
+  //     onPlayerError?: (playerError: { error: string }) => void;
+  //     onBuffer?: (event: any) => void;
+  //     onTime?: (event: any) => void;
+  //     onComplete?: (event: any) => void;
+  //     onFullScreenRequested?: (event: any) => void;
+  //     onFullScreen?: (event: any) => void;
+  //     onFullScreenExitRequested?: (event: any) => void;
+  //     onFullScreenExit?: (event: any) => void;
+  //     onSeek?: (seek: { position: number; offset: number }) => void;
+  //     onSeeked?: (seeked?: { position: number }) => void;
+  //     onPlaylistItem?: (playlistItem: PlaylistItem) => void;
+  //     onControlBarVisible?: (event: any) => void;
+  //     onPlaylistComplete?: (event: any) => void;
+  //     onAudioTracks?: (event: any) => void;
+  //     shouldComponentUpdate?: (nextProps: any, nextState: any) => boolean;
+  //     onCasting?: (event: any) => void;
+  //   }
   interface PropsType {
     config: Config;
     style?: ViewStyle;
     controls?: boolean;
-    onPlayerReady?: (event: any) => void;
-    // Added this prop to get callback whenever user touches the player overlay
-    onDisplayClick?: (event: any) => void;
-    onPlaylist?: (playlist: PlaylistItem[]) => void;
-    onBeforePlay?: (event: any) => void;
-    onBeforeComplete?: (event: any) => void;
-    onPlay?: (event: any) => void;
-    onPause?: (event: any) => void;
-    onSetupPlayerError?: (setupPlayerError: { error: string }) => void;
-    onPlayerError?: (playerError: { error: string }) => void;
-    onBuffer?: (event: any) => void;
-    onTime?: (event: any) => void;
-    onComplete?: (event: any) => void;
-    onFullScreenRequested?: (event: any) => void;
-    onFullScreen?: (event: any) => void;
-    onFullScreenExitRequested?: (event: any) => void;
-    onFullScreenExit?: (event: any) => void;
-    onSeek?: (seek: { position: number; offset: number }) => void;
-    onSeeked?: (seeked?: { position: number }) => void;
-    onPlaylistItem?: (playlistItem: PlaylistItem) => void;
-    onControlBarVisible?: (event: any) => void;
-    onPlaylistComplete?: (event: any) => void;
-    onAudioTracks?: (event: any) => void;
+    onPlayerReady?: () => void;
+    onPlaylist?: (event: BaseEvent<PlaylistEventProps>) => void;
+    onBeforePlay?: () => void;
+    onBeforeComplete?: () => void;
+    onComplete?: () => void;
+    onPlay?: () => void;
+    onPause?: () => void;
+    onSeek?: (event: BaseEvent<SeekEventProps>) => void;
+    onSeeked?: (event?: BaseEvent<SeekedEventProps>) => void;
+    onRateChanged?: (event?: BaseEvent<RateChangedEventProps>) => void;
+    onSetupPlayerError?: NativeError;
+    onPlayerError?: NativeError;
+    onPlayerWarning?: NativeWarning;
+    onPlayerAdError?: NativeError;
+    onPlayerAdWarning?: NativeWarning;
+    onAdEvent?: (event: BaseEvent<AdEventProps>) => void;
+    onAdTime?: (event: BaseEvent<TimeEventProps>) => void;
+    onBuffer?: () => void;
+    onTime?: (event: BaseEvent<TimeEventProps>) => void;
+    onFullScreenRequested?: () => void;
+    onFullScreen?: () => void;
+    onFullScreenExitRequested?: () => void;
+    onFullScreenExit?: () => void;
+    onControlBarVisible?: (event: BaseEvent<ControlBarVisibleEventProps>) => void;
+    onPlaylistComplete?: () => void;
+    onPlaylistItem?: (event: BaseEvent<PlaylistItemEventProps>) => void;
+    onAudioTracks?: () => void;
     shouldComponentUpdate?: (nextProps: any, nextState: any) => boolean;
     onCasting?: (event: any) => void;
   }
