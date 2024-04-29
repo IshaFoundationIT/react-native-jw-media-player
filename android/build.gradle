@@ -69,6 +69,8 @@ allprojects {
 //OLD WORKING VERSIONS
 //def jwPlayerVersion = "4.8.0"
 //def exoplayerVersion = "2.18.1"
+//def jwPlayerVersion = "4.16.2"
+//def exoplayerVersion = "1.3.0"
 def jwPlayerVersion = "4.16.2"
 def exoplayerVersion = "1.3.0"
 
