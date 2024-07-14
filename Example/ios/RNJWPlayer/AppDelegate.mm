@@ -11,9 +11,12 @@
 #import "Orientation.h"
 #import "RNFSManager.h"
 #import "RNBootSplash.h"
-#import <GoogleCast/GoogleCast.h>
 
-static NSString *const kReceiverAppID = @"RNJWPlayer";
+#if USE_GOOGLE_CAST
+  #import <GoogleCast/GoogleCast.h>
+
+  static NSString *const kReceiverAppID = @"RNJWPlayer";
+#endif
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -24,6 +27,8 @@ static NSString *const kReceiverAppID = @"RNJWPlayer";
 #import <ReactCommon/RCTTurboModuleManager.h>
 
 #import <react/config/ReactNativeConfig.h>
+
+static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 @interface AppDelegate () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate> {
   RCTTurboModuleManager *_turboModuleManager;
@@ -38,10 +43,12 @@ static NSString *const kReceiverAppID = @"RNJWPlayer";
 
 -(void)initApis:(UIApplication *)application launchOptions:(NSDictionary *)launchOptions
 {
-  GCKDiscoveryCriteria *criteria = [[GCKDiscoveryCriteria alloc]
-                                    initWithApplicationID:kReceiverAppID];
-  GCKCastOptions *options = [[GCKCastOptions alloc] initWithDiscoveryCriteria:criteria];
-  [GCKCastContext setSharedInstanceWithOptions:options];
+  #if USE_GOOGLE_CAST
+    GCKDiscoveryCriteria *criteria = [[GCKDiscoveryCriteria alloc]
+                                      initWithApplicationID:kReceiverAppID];
+    GCKCastOptions *options = [[GCKCastOptions alloc] initWithDiscoveryCriteria:criteria];
+    [GCKCastContext setSharedInstanceWithOptions:options];
+  #endif
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -60,7 +67,8 @@ static NSString *const kReceiverAppID = @"RNJWPlayer";
   bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
 #endif
 
-  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"RNJWPlayer", nil);
+  NSDictionary *initProps = [self prepareInitialProps];
+  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"RNJWPlayer", initProps);
 
   if (@available(iOS 13.0, *)) {
     rootView.backgroundColor = [UIColor systemBackgroundColor];
@@ -77,6 +85,25 @@ static NSString *const kReceiverAppID = @"RNJWPlayer";
   [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
 
   return YES;
+}
+
+// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
+///
+/// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
+/// @note: This requires to be rendering on Fabric (i.e. on the New Architecture).
+/// @return: `true` if the `concurrentRoot` feture is enabled. Otherwise, it returns `false`.
+- (BOOL)concurrentRootEnabled
+{
+  // Switch this bool to turn on and off the concurrent root
+  return true;
+}
+- (NSDictionary *)prepareInitialProps
+{
+  NSMutableDictionary *initProps = [NSMutableDictionary new];
+#ifdef RCT_NEW_ARCH_ENABLED
+  initProps[kRNConcurrentRoot] = @([self concurrentRootEnabled]);
+#endif
+  return initProps;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
