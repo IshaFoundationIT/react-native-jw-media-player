@@ -413,21 +413,6 @@ export default class JWPlayer extends Component {
       RNJWPlayerManager.stop(this.getRNJWPlayerBridgeHandle());
   }
 
-  currentQuality() {
-    if (RNJWPlayerManager && Platform.OS === "android")
-      return RNJWPlayerManager.getCurrentQuality(
-        this.getRNJWPlayerBridgeHandle()
-      );
-  }
-
-  setCurrentQuality(index) {
-    if (RNJWPlayerManager && Platform.OS === "android")
-      RNJWPlayerManager.setCurrentQuality(
-        this.getRNJWPlayerBridgeHandle(),
-        index
-      );
-  }
-
   setCurrentQuality(index) {
     if (RNJWPlayerManager && Platform.OS === "android")
       RNJWPlayerManager.setCurrentQuality(
@@ -582,20 +567,6 @@ export default class JWPlayer extends Component {
           this.getRNJWPlayerBridgeHandle()
         );
         return connectedDevice;
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
-  }
-
-  async getQualityLevels() {
-    if (RNJWPlayerManager && Platform.OS === "android") {
-      try {
-        var qualityLevels = await RNJWPlayerManager.getQualityLevels(
-          this.getRNJWPlayerBridgeHandle()
-        );
-        return qualityLevels;
       } catch (e) {
         console.error(e);
         return null;
