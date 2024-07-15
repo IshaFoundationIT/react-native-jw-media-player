@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   requireNativeComponent,
-  UIManager,
   NativeModules,
   Platform,
   findNodeHandle,
@@ -17,7 +16,7 @@ const RNJWPlayerManager =
 let playerId = 0;
 const RCT_RNJWPLAYER_REF = "RNJWPlayerKey";
 
-const RNJWPlayer = requireNativeComponent("RNJWPlayerView", null);
+const RNJWPlayer = requireNativeComponent("RNJWPlayerView");
 
 const JWPlayerStateIOS = {
   JWPlayerStateUnknown: 0,
@@ -38,6 +37,35 @@ const JWPlayerStateAndroid = {
   JWPlayerStateError: null,
 };
 
+export const JWPlayerAdEvents = {
+  /// This event is reported when the ad break has come to an end.
+  JWAdEventTypeAdBreakEnd: 0,
+  /// This event is reported when the ad break has begun.
+  JWAdEventTypeAdBreakStart: 1,
+  /// This event is reported when the user taps the ad.
+  JWAdEventTypeClicked: 2,
+  /// This event is reported when the ad is done playing.
+  JWAdEventTypeComplete: 3,
+  /// This event is used to report the ad impression, supplying additional detailed information about the ad.
+  JWAdEventTypeImpression: 4,
+  /// This event reports meta data information associated with the ad.
+  JWAdEventTypeMeta: 5,
+  /// The event is reported when the ad pauses.
+  JWAdEventTypePause: 6,
+  /// This event is reported when the ad begins playing, even in the middle of the stream after it was paused.
+  JWAdEventTypePlay: 7,
+  /// The event reports data about the ad request, when the ad is about to be loaded.
+  JWAdEventTypeRequest: 8,
+  /// This event reports the schedule of ads across the currently playing content.
+  JWAdEventTypeSchedule: 9,
+  /// This event is reported when the user skips the ad.
+  JWAdEventTypeSkipped: 10,
+  /// This event is reported when the ad begins.
+  JWAdEventTypeStarted: 11,
+  /// This event relays information about ad companions.
+  JWAdEventTypeCompanion: 12,
+};
+
 export const JWPlayerState =
   Platform.OS === "ios" ? JWPlayerStateIOS : JWPlayerStateAndroid;
 
@@ -47,6 +75,98 @@ export const JWPlayerAdClients = {
   JWAdClientGoogleIMADAI: 2,
   JWAdClientUnknown: 3,
 };
+
+// Common PropTypes for imaSettings and adRules
+const imaSettingsPropTypes = PropTypes.shape({
+  locale: PropTypes.string,
+  ppid: PropTypes.string,
+  maxRedirects: PropTypes.number,
+  sessionID: PropTypes.string,
+  debugMode: PropTypes.bool,
+});
+
+const adRulesPropTypes = PropTypes.shape({
+  startOn: PropTypes.number,
+  frequency: PropTypes.number,
+  timeBetweenAds: PropTypes.number,
+  startOnSeek: PropTypes.oneOf(["none", "pre"]),
+});
+
+const adSettingsPropTypes = PropTypes.shape({
+  allowsBackgroundPlayback: PropTypes.bool,
+  // Include other ad settings properties here
+});
+
+const adSchedulePropTypes = PropTypes.arrayOf(
+  PropTypes.shape({
+    tag: PropTypes.string,
+    offset: PropTypes.string,
+  })
+);
+
+// Define PropTypes for each ad client type
+const vastAdvertisingPropTypes = {
+  adClient: PropTypes.oneOf(["vast"]),
+  adSchedule: adSchedulePropTypes,
+  adVmap: PropTypes.string,
+  tag: PropTypes.string,
+  openBrowserOnAdClick: PropTypes.bool,
+  adRules: adRulesPropTypes,
+  adSettings: adSettingsPropTypes,
+  // Add other VAST-specific properties here
+};
+
+const imaAdvertisingPropTypes = {
+  adClient: PropTypes.oneOf(["ima"]),
+  adSchedule: adSchedulePropTypes,
+  adVmap: PropTypes.string,
+  tag: PropTypes.string,
+  imaSettings: imaSettingsPropTypes,
+  adRules: adRulesPropTypes,
+  // companionAdSlots: PropTypes.arrayOf(
+  //     PropTypes.shape({
+  //         viewId: PropTypes.string,
+  //         size: PropTypes.shape({
+  //             width: PropTypes.number,
+  //             height: PropTypes.number,
+  //         }),
+  //     })
+  // ),
+  // friendlyObstructions: PropTypes.arrayOf(
+  //     PropTypes.shape({
+  //         viewId: PropTypes.string,
+  //         purpose: PropTypes.oneOf(['mediaControls', 'closeAd', 'notVisible', 'other']),
+  //         reason: PropTypes.string,
+  //     })
+  // ),
+  // Add other IMA-specific properties here
+};
+
+const imaDaiAdvertisingPropTypes = {
+  adClient: PropTypes.oneOf(["ima_dai"]),
+  imaSettings: imaSettingsPropTypes,
+  googleDAIStream: PropTypes.shape({
+    videoID: PropTypes.string,
+    cmsID: PropTypes.string,
+    assetKey: PropTypes.string,
+    apiKey: PropTypes.string,
+    adTagParameters: PropTypes.object,
+  }),
+  // friendlyObstructions: PropTypes.arrayOf(
+  //     PropTypes.shape({
+  //         viewId: PropTypes.string,
+  //         purpose: PropTypes.oneOf(['mediaControls', 'closeAd', 'notVisible', 'other']),
+  //         reason: PropTypes.string,
+  //     })
+  // ),
+  // Add other IMA DAI-specific properties here
+};
+
+const advertisingPropTypes = PropTypes.oneOfType([
+  PropTypes.shape(vastAdvertisingPropTypes),
+  PropTypes.shape(imaAdvertisingPropTypes),
+  PropTypes.shape(imaDaiAdvertisingPropTypes),
+]);
 
 export default class JWPlayer extends Component {
   static propTypes = {
@@ -122,18 +242,7 @@ export default class JWPlayer extends Component {
           startTime: PropTypes.number,
         })
       ),
-      advertising: PropTypes.shape({
-        adClient: PropTypes.string,
-        adSchedule: PropTypes.arrayOf(
-          PropTypes.shape({
-            tag: PropTypes.string,
-            offset: PropTypes.string,
-          })
-        ),
-        adVmap: PropTypes.string,
-        tag: PropTypes.string,
-        openBrowserOnAdClick: PropTypes.bool,
-      }),
+      advertising: advertisingPropTypes,
 
       // controller only
       interfaceBehavior: PropTypes.oneOf(["normal", "hidden", "onscreen"]),
@@ -200,16 +309,15 @@ export default class JWPlayer extends Component {
     pause: PropTypes.func,
     setVolume: PropTypes.func,
     toggleSpeed: PropTypes.func,
+    setSpeed: PropTypes.func,
     setCurrentQuality: PropTypes.func,
     currentQuality: PropTypes.func,
     getQualityLevels: PropTypes.func,
-    setSpeed: PropTypes.func,
     setPlaylistIndex: PropTypes.func,
     setControls: PropTypes.func,
     setVisibility: PropTypes.func,
     setLockScreenControls: PropTypes.func,
     setFullscreen: PropTypes.func,
-    setMute: PropTypes.func,
     setUpCastController: PropTypes.func,
     presentCastDialog: PropTypes.func,
     connectedDevice: PropTypes.func,
@@ -223,6 +331,11 @@ export default class JWPlayer extends Component {
     onPause: PropTypes.func,
     onSetupPlayerError: PropTypes.func,
     onPlayerError: PropTypes.func,
+    onPlayerWarning: PropTypes.func,
+    onPlayerAdError: PropTypes.func,
+    onPlayerAdWarning: PropTypes.func,
+    onAdEvent: PropTypes.func,
+    onAdTime: PropTypes.func,
     onBuffer: PropTypes.func,
     onTime: PropTypes.func,
     onComplete: PropTypes.func,
@@ -232,6 +345,7 @@ export default class JWPlayer extends Component {
     onFullScreenExit: PropTypes.func,
     onSeek: PropTypes.func,
     onSeeked: PropTypes.func,
+    onRateChanged: PropTypes.func,
     onPlaylistItem: PropTypes.func,
     onControlBarVisible: PropTypes.func,
     onPlaylistComplete: PropTypes.func,
@@ -240,7 +354,6 @@ export default class JWPlayer extends Component {
     setCurrentAudioTrack: PropTypes.func,
     setCurrentCaptions: PropTypes.func,
     onAudioTracks: PropTypes.func,
-    onCasting: PropTypes.func,
   };
 
   constructor(props) {
@@ -300,13 +413,6 @@ export default class JWPlayer extends Component {
       RNJWPlayerManager.stop(this.getRNJWPlayerBridgeHandle());
   }
 
-  currentQuality() {
-    if (RNJWPlayerManager && Platform.OS === "android")
-      return RNJWPlayerManager.getCurrentQuality(
-        this.getRNJWPlayerBridgeHandle()
-      );
-  }
-
   setCurrentQuality(index) {
     if (RNJWPlayerManager && Platform.OS === "android")
       RNJWPlayerManager.setCurrentQuality(
@@ -315,9 +421,33 @@ export default class JWPlayer extends Component {
       );
   }
 
-  toggleSpeed() {
+  currentQuality() {
+    if (RNJWPlayerManager && Platform.OS === "android")
+      return RNJWPlayerManager.getCurrentQuality(
+        this.getRNJWPlayerBridgeHandle()
+      );
+  }
+
+  async getQualityLevels() {
+    if (RNJWPlayerManager && Platform.OS === "android") {
+      try {
+        var qualityLevels = await RNJWPlayerManager.getQualityLevels(
+          this.getRNJWPlayerBridgeHandle()
+        );
+        return qualityLevels;
+      } catch (e) {
+        console.error(e);
+        return null;
+      }
+    }
+  }
+
+  setPlaylistIndex(index) {
     if (RNJWPlayerManager)
-      RNJWPlayerManager.toggleSpeed(this.getRNJWPlayerBridgeHandle());
+      RNJWPlayerManager.setPlaylistIndex(
+        this.getRNJWPlayerBridgeHandle(),
+        index
+      );
   }
 
   setSpeed(speed) {
@@ -437,20 +567,6 @@ export default class JWPlayer extends Component {
           this.getRNJWPlayerBridgeHandle()
         );
         return connectedDevice;
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
-  }
-
-  async getQualityLevels() {
-    if (RNJWPlayerManager && Platform.OS === "android") {
-      try {
-        var qualityLevels = await RNJWPlayerManager.getQualityLevels(
-          this.getRNJWPlayerBridgeHandle()
-        );
-        return qualityLevels;
       } catch (e) {
         console.error(e);
         return null;

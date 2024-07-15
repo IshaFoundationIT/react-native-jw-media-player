@@ -1,6 +1,6 @@
 package com.appgoalz.rnjwplayer;
 
-import static com.google.android.exoplayer2.util.Util.toByteArray;
+import static androidx.media3.common.util.Util.toByteArray;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -166,6 +166,11 @@ public class Util {
             itemBuilder.startTime(startTime);
         }
 
+        if (playlistItem.hasKey("duration")) {
+            int duration = playlistItem.getInt("duration");
+            itemBuilder.duration(duration);
+        }
+
         if (playlistItem.hasKey("tracks")) {
             ArrayList<Caption> tracks = new ArrayList<>();
             ReadableArray track = playlistItem.getArray("tracks");
@@ -212,5 +217,36 @@ public class Util {
         }
 
         return itemBuilder.build();
+    }
+
+    public enum AdEventType {
+        JWAdEventTypeAdBreakEnd(0),
+        JWAdEventTypeAdBreakStart(1),
+        JWAdEventTypeClicked(2),
+        JWAdEventTypeComplete(3),
+        JWAdEventTypeImpression(4),
+        JWAdEventTypeMeta(5),
+        JWAdEventTypePause(6),
+        JWAdEventTypePlay(7),
+        JWAdEventTypeRequest(8),
+        JWAdEventTypeSchedule(9),
+        JWAdEventTypeSkipped(10),
+        JWAdEventTypeStarted(11),
+        JWAdEventTypeCompanion(12);
+
+        private final int value;
+
+        AdEventType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    // Method to get the event type value
+    public static int getEventTypeValue(AdEventType eventType) {
+        return eventType.getValue();
     }
 }

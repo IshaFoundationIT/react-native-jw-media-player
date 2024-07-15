@@ -211,6 +211,7 @@ Running the example project:
 | **`viewOnly`**                 | When true the player will not have any controls it will show only the video.                                                                                                                                                                                                                                                                                            | `Boolean`                                                                                                                                                                                                              | `iOS`                                       | `false`    |
 | **`pipEnabled`**               | When true the player will be able to go into Picture in Picture mode. **Note: This is true by default for iOS PlayerViewController**. **For Android you will also need to follow the instruction mentioned [here](https://developer.jwplayer.com/jwplayer/docs/android-invoke-picture-in-picture-playback) && below [Picture in picture](Picture-in-picture) section.** | `Boolean`                                                                                                                                                                                                              | `iOS when viewOnly prop is true && Android` | `false`    |
 | **`interfaceBehavior`**        | The behavior of the player interface.                                                                                                                                                                                                                                                                                                                                   | `'normal', 'hidden', 'onscreen'`                                                                                                                                                                                       | `iOS`                                       | `normal`   |
+| **`interfaceFadeDelay`**        | The number of seconds to wait when fading the interface. The default value is 3 seconds.                                                                                                                                                                                                                                                                                                                                   | `number`                                                                                                                                                                                       | `iOS`                                       | `3`   |
 | **`preload`**                  | The behavior of the preload.                                                                                                                                                                                                                                                                                                                                            | `'auto', 'none'`                                                                                                                                                                                                       | `iOS`                                       | `auto`     |
 | **`related`**                  | The related videos behaviors. Check out the [Related](#Related) section.                                                                                                                                                                                                                                                                                                | `Object`                                                                                                                                                                                                               | `iOS`                                       | `none`     |
 | **`hideUIGroups`**              | A way to hide certain UI groups in the player.                                                                                                                                                                                                                                                                                                                         | Array of `'overlay', 'control_bar', 'center_controls', 'next_up', 'error', 'playlist', 'controls_container', 'settings_menu', 'quality_submenu', 'captions_submenu', 'playback_submenu', 'audiotracks_submenu', 'casting_menu'` | `Android`                                   | `none`     |
@@ -224,8 +225,8 @@ Running the example project:
 | --------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | **`mediaId`**         | The JW media id.                                                                                         | `Int`                                             |
 | **`startTime`**       | the player should start from a certain second.                                                           | `Int`                                             |
-| **`adVmap`**          | The url of ads VMAP xml.                                                                                 | `String`                                          |
-| **`adSchedule`**      | Array of tags and and offsets for ads.                                                                   | `{tag: String, offset: String}`                   |
+| **`adVmap`**          | The url of ads VMAP xml. (iOS only)                                                                                 | `String`                                          |
+| **`adSchedule`**      | Array of tags and and offsets for ads. (iOS only)                                                                   | `{tag: String, offset: String}`                   |
 | **`description`**     | Description of the track.                                                                                | `String`                                          |
 | **`file`**            | The url of the file to play.                                                                             | `String`                                          |
 | **`tracks`**          | Array of caption tracks.                                                                                 | `{file: String, label: String}`                   |
@@ -397,12 +398,26 @@ Checkout the DRMExample in the Example app. (The DRMExample cannot be run in the
 
 ##### Advertising
 
-| Prop                       | Description                                                                               | Type                            |
-| -------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------- |
-| **`adVmap`**               | The url of ads VMAP xml.                                                                  | `String`                        |
-| **`adSchedule`**           | Array of tags and and offsets for ads.                                                    | `{tag: String, offset: String}` |
-| **`openBrowserOnAdClick`** | Should the player open the browser when clicking on an ad.                                | `Boolean`                       |
-| **`adClient`**             | The ad client. One of [JWPlayerAdClients](#JWPlayerAdClients), defaults to JWAdClientVast | `'vast', 'ima", 'ima_dai'`      |
+### Important
+When using an **IMA** ad client you need to do some additional setup.
+
+- **iOS**: Add `$RNJWPlayerUseGoogleIMA = true` to your Podfile, this will add `GoogleAds-IMA-iOS-SDK` pod.
+
+- **Android**: Add `RNJWPlayerUseGoogleIMA = true` in your *app/build.gradle* `ext {}` this will add `'com.google.ads.interactivemedia.v3:interactivemedia:3.29.0'`
+        and `'com.google.android.gms:play-services-ads-identifier:18.0.1'`.
+
+| Prop                          | Description                                                                                              | Type                                          | Availability            |
+|-------------------------------|----------------------------------------------------------------------------------------------------------|-----------------------------------------------|-------------------------|
+| **`adVmap`**                  | The URL of the ads VMAP XML.                                                                             | `String`                                      | All Clients (iOS only)             |
+| **`adSchedule`**              | Array of tags and offsets for ads.                                                                       | `{tag: String, offset: String}[]`             | All Clients             |
+| **`openBrowserOnAdClick`**    | Should the player open the browser when clicking on an ad.                                               | `Boolean`                                     | All Clients             |
+| **`adClient`**                | The ad client. One of `vast`, `ima`, or `ima_dai`, check out [JWPlayerAdClients](#JWPlayerAdClients), defaults to `vast`.                                  | `'vast'`, `'ima'`, `'ima_dai'`               | All Clients             |
+| **`adRules`**                 | Ad rules for VAST client.                                                                                | `{startOn: Number, frequency: Number, timeBetweenAds: Number, startOnSeek: 'none' \| 'pre'}` | VAST only               |
+| **`imaSettings`**             | Settings specific to Google IMA SDK.                                                                     | `{locale: String, ppid: String, maxRedirects: Number, sessionID: String, debugMode: Boolean}` | IMA and IMA DAI         |
+| **`companionAdSlots`**        | Array of objects representing companion ad slots.                                                        | `{viewId: String, size?: {width: Number, height: Number}}[]` | IMA only                |
+| **`friendlyObstructions`**    | Array of objects representing friendly obstructions for viewability measurement.                         | `{viewId: String, purpose: 'mediaControls' \| 'closeAd' \| 'notVisible' \| 'other', reason?: String}[]` | IMA and IMA DAI         |
+| **`googleDAIStream`**         | Stream configuration for Google DAI (Dynamic Ad Insertion).                                              | `{videoID?: String, cmsID?: String, assetKey?: String, apiKey?: String, adTagParameters?: {[key: string]: string}}` | IMA DAI only            |
+| **`tag`**         | Vast xml URL.                                              | `String` | Vast only (iOS only)            |
 
 ##### Related
 
@@ -527,6 +542,7 @@ public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Conf
 | **`onPause`**                   | Player paused playing.                                                                                                                                                                                                     | `none`                                                                                                                                                                                                                                                                                                                          |
 | **`onSeek`**                    | Seek event requested from user.                                                                                                                                                                                            | `{position: Double, offset: Double}`                                                                                                                                                                                                                                                                                            |
 | **`onSeeked`**                  | Player finished seeking to a new position.                                                                                                                                                                                 | On **iOS** `none`, On **Android** `{position: Double}`                                                                                                                                                                                                                                                                          |
+| **`onRateChanged`**                  | Player speed was changed by the user from the settings menu.                                                                                                                                                                                 | On **iOS** `{rate: Double, at: Double}`, On **Android** `{rate: Double, at: Double}`                                                                                                                                                                                                                                                                          |
 | **`onSetupPlayerError`**        | Player faced and error while setting up the player.                                                                                                                                                                        | `{error: String}`                                                                                                                                                                                                                                                                                                               |
 | **`onPlayerError`**             | Player faced an error after setting up the player but when attempting to start playing.                                                                                                                                    | `{error: String}`                                                                                                                                                                                                                                                                                                               |
 | **`onBuffer`**                  | The player is buffering.                                                                                                                                                                                                   | `none`                                                                                                                                                                                                                                                                                                                          |
@@ -556,9 +572,11 @@ JWPlayer enables casting by default with a casting button (if you pass the `view
 
 ###### iOS
 
-Follow the instruction [here](https://developer.jwplayer.com/jwplayer/docs/ios-enable-casting-to-chromecast-devices) on the official JWPlayer site.
+1: Follow the instruction [here](https://developer.jwplayer.com/jwplayer/docs/ios-enable-casting-to-chromecast-devices) on the official JWPlayer site.
 
-Edit your `Info.plist` with the following values:
+2: Add `$RNJWPlayerUseGoogleCast = true` to your Podfile, this will install `google-cast-sdk` pod.
+
+3: Edit your `Info.plist` with the following values:
 
 ```
 'NSBluetoothAlwaysUsageDescription' => 'We will use your Bluetooth for media casting.',
@@ -568,7 +586,22 @@ Edit your `Info.plist` with the following values:
 'NSMicrophoneUsageDescription' => 'We will use your Microphone for media casting.'
 ```
 
-Enable _Access WiFi Information_ capability under `Signing & Capabilities`
+4: Enable _Access WiFi Information_ capability under `Signing & Capabilities`
+
+###### Android
+1. Add `RNJWPlayerUseGoogleCast = true` to your *app/build.gradle* in `ext {}`.
+2. Add `com.google.android.gms:play-services-cast-framework:21.3.0` to your Android **app/build.gradle**
+3. Create a class that overrides `OptionsProvider` in **your** Android codebase
+    1. See reference file `android/src/main/java/com/appgoalz/rnjwplayer/CastOptionsProvider.java`
+    2. Replace `.setTargetActivityClassName(RNJWPlayerView.class.getName())` with your player Activity
+    3. Modify the file with any options necessary for your use case
+4. Add the meta-data to your `AndroidManifest.xml` like below, ensuring 
+```xml
+    <meta-data
+        android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+        android:value="path.to.CastOptionsProvider" />
+```
+5. Casting should now be enabled
 
 #### Available methods
 
