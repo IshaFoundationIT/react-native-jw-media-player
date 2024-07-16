@@ -129,23 +129,6 @@ RCT_EXTERN_METHOD(loadPlaylist: (nonnull NSNumber *)reactTag: (nonnull NSArray *
 
 RCT_EXTERN_METHOD(setFullscreen: (nonnull NSNumber *)reactTag: (BOOL)fullscreen)
 
-RCT_EXPORT_METHOD(setMute: (nonnull NSNumber *)reactTag :(BOOL)isMuted) {
-    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, RNJWPlayerView *> *viewRegistry) {
-        RNJWPlayerView *view = viewRegistry[reactTag];
-        if (![view isKindOfClass:[RNJWPlayerView class]]) {
-            RCTLogError(@"Invalid view returned from registry, expecting RNJWPlayerView, got: %@", view);
-            return;
-        }
-
-/// From JWPlayer - The volume relative to the volume of the device. All values are clamped from 0.0 (mute) to 1.0 (current volume of the device).
-        CGFloat volume = isMuted ? 0.0 : 1.0;
-
-        if (view.playerView) {
-            [view.playerView.player setVolume:volume];
-        } else if (view.playerViewController) {
-            [view.playerViewController.player setVolume:volume];
-        }
-    }];
-}
+RCT_EXTERN_METHOD(setMute: (nonnull NSNumber *)reactTag :(BOOL)isMuted)
 
 @end
