@@ -206,6 +206,7 @@ export default class JWPlayer extends Component {
       ]),
       pipEnabled: PropTypes.bool,
       viewOnly: PropTypes.bool,
+      playbackRates: PropTypes.arrayOf(PropTypes.number),
       autostart: PropTypes.bool,
       controls: PropTypes.bool,
       repeat: PropTypes.bool,

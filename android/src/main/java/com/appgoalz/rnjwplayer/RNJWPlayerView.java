@@ -589,6 +589,7 @@ public class RNJWPlayerView extends RelativeLayout implements
                         .useTextureView(oldConfig.useTextureView())
                         .thumbnailPreview(oldConfig.getThumbnailPreview())
                         .mute(oldConfig.getMute())
+                        .playbackRates(oldConfig.getPlaybackRates())
                         .build();
 
                 mPlayer.setup(config);
@@ -663,6 +664,20 @@ public class RNJWPlayerView extends RelativeLayout implements
             if (prop.hasKey("playlistIndex")) {
                 int playlistIndex = prop.getInt("playlistIndex");
                 configBuilder.playlistIndex(playlistIndex);
+            }
+        }
+
+        if (prop.hasKey("playbackRates")) {
+            ReadableArray playbackRatesProp = prop.getArray("playbackRates");
+            if (playbackRatesProp != null && playbackRatesProp.size() > 0) {
+                double[] playbackRates = new double[playbackRatesProp.size()];
+                int j = 0;
+                while (playbackRatesProp.size() > j) {
+                    playbackRates[j] = playbackRatesProp.getDouble(j);
+                    j++;
+                }
+                configBuilder.playbackRates(playbackRates);
+                // default: configBuilder.playbackRates(new double [] {0.5, 1, 1.2, 1.5, 2});
             }
         }
 
