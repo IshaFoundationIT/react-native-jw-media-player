@@ -100,6 +100,7 @@ import com.jwplayer.pub.api.fullscreen.FullscreenHandler;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 import com.jwplayer.ui.views.CueMarkerSeekbar;
+import com.longtailvideo.jwplayer.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
