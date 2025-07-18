@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.jwplayer.ui.views.CueMarkerSeekbar;
+import com.longtailvideo.jwplayer.R;
 
 
 public class RNJWPlayer extends JWPlayerView {
